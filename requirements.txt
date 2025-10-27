@@ -1,0 +1,35 @@
+
+
+# Core LLM + CrewAI Framework
+crewai>=0.22.0
+crewai-tools>=0.3.0
+google-generativeai>=0.6.0
+openai>=1.13.3  # keeping for compatibility
+python-dotenv>=1.0.0
+langchain>=0.1.0  # for CSV tool base class
+langchain>=0.1.0  # for custom CSV tool
+
+# Data Handling & Analysis
+pandas>=2.1.1
+numpy>=1.26.0
+
+# Visualization (for spending charts)
+matplotlib>=3.8.0
+
+# Web / API Access
+requests>=2.31.0
+
+# Testing Tools
+pytest>=7.4.0
+pytest-dotenv>=0.5.2
+coverage>=7.3.1
+
+# Utility & Environment
+python-dateutil>=2.8.2
+tqdm>=4.66.1
+
+# Optional (if you use CSV or YAML configs)
+pyyaml>=6.0.1
+
+
+qdrant-client>=1.9.3

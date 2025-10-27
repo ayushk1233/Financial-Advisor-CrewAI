@@ -1,0 +1,29 @@
+read_data_task:
+  description: >
+    Read the customer transaction data from the CSV file located at {csv_path}.
+    Summarize the total income, total spending, spending by category, and any
+    loan information present in the data.
+  expected_output: >
+    A summary of financial data including total income, total spending, spending
+    breakdown by category, and loan details.
+  agent: data_reader
+
+advise_task:
+  description: >
+    Based on the financial data summary, analyze the customer's financial health.
+    Identify areas of concern such as overspending, lack of savings, or high debt.
+    Provide 3-5 actionable recommendations to improve their financial situation.
+  expected_output: >
+    A list of 3-5 specific financial recommendations tailored to the customer's
+    spending and income patterns.
+  agent: advisor
+
+write_report_task:
+  description: >
+    Using the data summary and financial recommendations, write a comprehensive
+    financial health report in markdown format. The report should include sections
+    for: Financial Summary, Spending Analysis, Recommendations, and Conclusion.
+  expected_output: >
+    A well-structured markdown report summarizing the customer's financial health
+    with clear recommendations.
+  agent: report_writer
