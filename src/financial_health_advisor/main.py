@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 import os
+import sys
 from dotenv import load_dotenv
-from crew import FinancialHealthAdvisorCrew
+
+# Ensure `src` is on sys.path so package imports work when running this script
+ROOT = os.path.dirname(os.path.dirname(__file__))  # src/
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
+from financial_health_advisor.crew import FinancialHealthAdvisorCrew
 
 # Load environment variables
 load_dotenv()

@@ -3,9 +3,9 @@ import pandas as pd
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai_tools import SerperDevTool
-from tools.visualize_spending_tool import visualize_spending_tool
-from tools.simple_csv_tool import simple_csv_search_tool
-from llm.gemini_llm import GeminiLLM
+from financial_health_advisor.tools.visualize_spending_tool import visualize_spending_tool
+from financial_health_advisor.tools.simple_csv_tool import simple_csv_search_tool
+from financial_health_advisor.llm.gemini_llm import GeminiLLM
 from google.api_core.exceptions import GoogleAPIError
 def read_csv_summary(file_path: str = "data/customer_transactions.csv") -> str:
     """Read and summarize CSV data"""

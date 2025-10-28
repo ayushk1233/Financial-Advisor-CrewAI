@@ -1,31 +1,29 @@
-from crewai.tools import tool
-import pandas as pd
+import os
 import matplotlib.pyplot as plt
+from crewai.tools import tool
 
-
-@tool("Visualize Spending Tool")
-def visualize_spending_tool(csv_path: str) -> str:
+@tool("visualize_spending_tool")
+def visualize_spending_tool(spending_data: dict) -> str:
     """
-    Creates a pie chart visualization of spending by category from CSV data.
-    Input should be the path to a CSV file with 'Category', 'Amount', and 'Type' columns.
+    Create and save a pie chart of spending by category.
+    Args:
+        spending_data (dict): Example - {"Rent": 1200, "Groceries": 400}
+    Returns:
+        str: Markdown link to the saved image for embedding in reports.
     """
     try:
-        df = pd.read_csv(csv_path)
-        
-        # Filter spending transactions (Expense type)
-        spending = df[df['Type'] == 'Expense'].copy()
-        
-        # Group by category
-        category_spending = spending.groupby('Category')['Amount'].sum()
-        
-        # Create pie chart
-        plt.figure(figsize=(8, 6))
-        plt.pie(category_spending.values, labels=category_spending.index, autopct='%1.1f%%')
-        plt.title('Spending Breakdown by Category')
-        plt.savefig('spending_breakdown.png')
+        labels = list(spending_data.keys())
+        values = list(spending_data.values())
+        plt.figure(figsize=(6, 6))
+        plt.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
+        plt.title("Spending Distribution by Category")
+        plt.tight_layout()
+
+        os.makedirs("data", exist_ok=True)
+        chart_path = os.path.join("data", "spending_chart.png")
+        plt.savefig(chart_path)
         plt.close()
-        
-        return "Spending visualization saved as 'spending_breakdown.png'"
-    
+
+        return f"![Spending Distribution]({chart_path})"
     except Exception as e:
-        return f"Error creating visualization: {str(e)}"
+        return f"Error generating visualization: {str(e)}"
