@@ -2,28 +2,64 @@ import os
 import matplotlib.pyplot as plt
 from crewai.tools import tool
 
-@tool("visualize_spending_tool")
+
+@tool
 def visualize_spending_tool(spending_data: dict) -> str:
     """
-    Create and save a pie chart of spending by category.
+    Generates a pie chart visualization of spending data and saves it locally.
+
     Args:
-        spending_data (dict): Example - {"Rent": 1200, "Groceries": 400}
+        spending_data (dict): Category-to-amount mapping, e.g.,
+            {"Rent": 1200, "Groceries": 400, "Utilities": 150}
+
     Returns:
-        str: Markdown link to the saved image for embedding in reports.
+        str: Markdown image link to embed the local pie chart.
     """
     try:
+        # Validate input
+        if not spending_data or not isinstance(spending_data, dict):
+            return "⚠️ No valid spending data available for visualization."
+
+        # Ensure categories and values
         labels = list(spending_data.keys())
         values = list(spending_data.values())
-        plt.figure(figsize=(6, 6))
-        plt.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
-        plt.title("Spending Distribution by Category")
-        plt.tight_layout()
 
+        if len(labels) == 0 or sum(values) == 0:
+            return "⚠️ Spending data is empty or sums to zero."
+
+        # Sort by value descending for consistent charts
+        items = sorted(zip(labels, values), key=lambda x: x[1], reverse=True)
+        labels, values = zip(*items)
+
+        # Create chart
+        plt.figure(figsize=(6, 6))
+        # Use a readable colormap
+        cmap = plt.get_cmap('tab20')
+        colors = [cmap(i % 20) for i in range(len(labels))]
+
+        wedges, texts, autotexts = plt.pie(
+            values,
+            labels=labels,
+            autopct="%1.1f%%",
+            startangle=90,
+            colors=colors,
+            textprops={'fontsize': 10}
+        )
+
+        plt.title("Monthly Spending by Category", fontsize=14)
+        # Improve contrast for autotexts
+        for t in autotexts:
+            t.set_color('white')
+
+        # Save chart locally
         os.makedirs("data", exist_ok=True)
         chart_path = os.path.join("data", "spending_chart.png")
-        plt.savefig(chart_path)
+        plt.savefig(chart_path, bbox_inches="tight", dpi=300)
         plt.close()
 
-        return f"![Spending Distribution]({chart_path})"
+        # Return markdown image path (relative)
+        return f"![Spending Distribution](data/spending_chart.png)"
+
     except Exception as e:
-        return f"Error generating visualization: {str(e)}"
+        # Return a friendly error message; do not raise to avoid crashing the report generation
+        return f"⚠️ Visualization error: {e}"
