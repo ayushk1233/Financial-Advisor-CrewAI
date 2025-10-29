@@ -102,11 +102,46 @@ class FinancialHealthAdvisorCrew():
             config=self.tasks_config['advise_task'],
         )
 
+    def embed_spending_visual(self):
+        try:
+            csv_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data/customer_transactions.csv")
+            print(f"Reading CSV from: {csv_path}")
+            df = pd.read_csv(csv_path)
+            print("CSV data loaded")
+            
+            # Get expenses and convert amounts to positive values
+            print("Filtering and processing expenses...")
+            df['Amount'] = df['Amount'].abs()  # Convert all amounts to positive
+            expense_data = df[df["Type"].str.strip().str.lower() == "expense"]
+            
+            if expense_data.empty:
+                print("⚠️ No expense data found")
+                return "⚠️ No expense data found in the transactions."
+            
+            print(f"Found {len(expense_data)} expense records")
+            # Group by category and sum the (now positive) amounts
+            category_data = expense_data.groupby("Category")["Amount"].sum().to_dict()
+            print(f"Category data: {category_data}")
+            
+            # Access and call the visualization tool using run()
+            image_markdown = visualize_spending_tool.run(category_data)
+            print(f"Generated markdown: {image_markdown}")
+            return image_markdown
+        except Exception as e:
+            print(f"❌ Error in embed_spending_visual: {str(e)}")
+            return f"⚠️ Visualization could not be generated: {str(e)}"
+
     @task
     def write_report_task(self) -> Task:
+        visualization_md = self.embed_spending_visual()
+        # Use absolute path for the report
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        report_path = os.path.join(project_root, 'financial_health_report.md')
+        
         return Task(
             config=self.tasks_config['write_report_task'],
-            output_file='financial_health_report.md'
+            output_file=report_path,
+            additional_context=f"\n\n### Spending Visualization\n{visualization_md}\n"
         )
 
     @crew
