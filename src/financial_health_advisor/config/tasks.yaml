@@ -22,8 +22,10 @@ write_report_task:
   description: >
     Using the data summary and financial recommendations, write a comprehensive
     financial health report in markdown format. The report should include sections
-    for: Financial Summary, Spending Analysis (including the generated spending visualization
-    chart as a markdown image link), Recommendations, and Conclusion.
+    for: Financial Summary, Spending Analysis (use ONLY the provided local visualization
+    at data/spending_chart.png for the spending chart, do not generate any external
+    chart URLs), Recommendations, and Conclusion. The spending visualization will be
+    provided in the additional_context parameter.
   expected_output: >
     A well-structured markdown report summarizing the customer's financial health
     with clear recommendations and visual spending breakdown.

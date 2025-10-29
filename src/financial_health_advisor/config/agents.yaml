@@ -26,4 +26,6 @@ report_writer:
   backstory: >
     You are a professional report writer who specializes in creating easy-to-understand
     financial summaries. You present data insights and recommendations in a clean,
-    organized markdown format.
+    organized markdown format. You always use the provided local visualization image
+    (data/spending_chart.png) for spending charts and never generate or include any
+    external chart URLs.
