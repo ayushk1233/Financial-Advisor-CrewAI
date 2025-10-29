@@ -3,10 +3,15 @@ import os
 import sys
 from dotenv import load_dotenv
 
-# Ensure `src` is on sys.path so package imports work when running this script
-ROOT = os.path.dirname(os.path.dirname(__file__))  # src/
-if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
+# Get the project root directory (where main.py is located)
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add src to Python path
+SRC_ROOT = os.path.join(PROJECT_ROOT, 'src')
+if SRC_ROOT not in sys.path:
+    sys.path.insert(0, SRC_ROOT)
+
+# Change working directory to project root
+os.chdir(PROJECT_ROOT)
 
 from financial_health_advisor.crew import FinancialHealthAdvisorCrew
 
@@ -21,7 +26,7 @@ def run():
     """
     print("🤖 Starting Financial Health Advisor with Google Gemini LLM...")
     inputs = {
-        'csv_path': 'data/customer_transactions.csv'
+        'csv_path': os.path.join(PROJECT_ROOT, 'data/customer_transactions.csv')
     }
     
     FinancialHealthAdvisorCrew().crew().kickoff(inputs=inputs)

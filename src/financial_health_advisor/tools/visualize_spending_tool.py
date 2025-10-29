@@ -1,6 +1,11 @@
 import os
 import matplotlib.pyplot as plt
-from crewai_tools import BaseTool
+try:
+    # New CrewAI package layout
+    from crewai.tools.base_tool import BaseTool
+except ImportError:
+    # Fallback to older package naming
+    from crewai_tools import Tool as BaseTool
 
 
 class VisualizeTool(BaseTool):

@@ -134,9 +134,8 @@ class FinancialHealthAdvisorCrew():
     @task
     def write_report_task(self) -> Task:
         visualization_md = self.embed_spending_visual()
-        # Use absolute path for the report
-        project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        report_path = os.path.join(project_root, 'financial_health_report.md')
+        # Use the current working directory (which is set to project root in main.py)
+        report_path = os.path.abspath('financial_health_report.md')
         
         return Task(
             config=self.tasks_config['write_report_task'],
